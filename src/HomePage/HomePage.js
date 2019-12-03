@@ -21,23 +21,33 @@ export default withStyles(styles) (class HomePage extends React.Component {
             dialogChar: {
                 name: '',
                 description: '',
-                class: ''
+                race: '',
+                classType: ''
             },
             characters: [
                 {
                     name: 'Hero',
                     description: 'I am no a Hero!.',
-                    class: "Mage"
+                    race: 'Dragonborn',
+                    classType: "Wizard",
+                    level: 2,
+                    idx: 0
                 },
                 {
                     name: 'Dorogon',
                     description: 'Description pospadkn.',
-                    class: "Warrior"
+                    race: 'Elf',
+                    classType: "Fighter",
+                    level: 1,
+                    idx: 1
                 },
                 {
                     name: 'Raigar',
                     description: 'Description lkcjanouihgdc.',
-                    class: "Paladin"
+                    race: 'Dwarf',
+                    classType: "Paladin",
+                    level: 1,
+                    idx: 2
                 }
             ]
         }
@@ -54,14 +64,41 @@ export default withStyles(styles) (class HomePage extends React.Component {
 
     handleCharacterCreate = character => {
         console.log(character)
+        const newCharacter = {...character,
+            idx: this.state.characters.length
+          }
 
         this.setState(({characters}) => ({
             characters: [
               ...characters,
-              character
+              newCharacter
             ]
         }))
     }
+
+    handleLevelUp = (character) => {
+        const newCharacter = {
+            ...character,
+            level: character.level + 1
+        }
+        console.log(newCharacter)
+
+        this.setState((({ characters }) => ({
+            characters: [
+                ...characters.filter(char => char.idx !== character.idx),
+                newCharacter
+            ]
+        })))
+    }
+
+    handleCharacterEdit = character => {
+        this.setState(({ characters }) => ({
+          characters: [
+              ...characters.filter(char => char.idx !== character.idx),
+              character
+          ]
+        }))
+      }
     
     handleSubmit(event) {
         alert('A name was submitted: ' + this.state.value);
@@ -78,6 +115,8 @@ export default withStyles(styles) (class HomePage extends React.Component {
                 />
                 <CharacterList
                     characters={characters}
+                    onLevelUp={this.handleLevelUp}
+                    onEdit={this.handleCharacterEdit}
                 />
             </div>  
         )

@@ -1,40 +1,62 @@
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
+import { makeStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
-import TextField from '@material-ui/core/TextField';
 import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
+import AppBar from '@material-ui/core/AppBar';
+import Toolbar from '@material-ui/core/Toolbar';
+import IconButton from '@material-ui/core/IconButton';
+import InfoIcon from '@material-ui/icons/Info';
+import Typography from '@material-ui/core/Typography';
+import CloseIcon from '@material-ui/icons/Close';
+import Grid from '@material-ui/core/Grid';
+import ButtonGroup from '@material-ui/core/ButtonGroup';
+
+import TextField from '@material-ui/core/TextField';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
-import DialogTitle from '@material-ui/core/DialogTitle';
-import Fab from '@material-ui/core/Fab';
 import FormControl from '@material-ui/core/FormControl';
 import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
 import Select from '@material-ui/core/Select';
-import AddIcon from '@material-ui/icons/Add';
 import { withStyles } from '@material-ui/core/styles';
 
 const styles = theme => ({
+    appBar: {
+        position: 'relative',
+      },
+      title: {
+        marginLeft: theme.spacing(2),
+        flex: 1,
+      },
+      selectEmpty: {
+        marginTop: theme.spacing(2),
+      },
 })
 
-export default withStyles(styles)  (class extends Component {
-  constructor(props) {
-    super(props)
-    this.state = {
-      open: false,
-      character: {
-        name: '',
-        description: '',
-        race: '',
-        classType: '',
-        level: 1
-      }
-    }
+// const Transition = React.forwardRef(function Transition(props, ref) {
+//   return <Slide direction="up" ref={ref} {...props} />;
+// });
+
+export default withStyles(styles) (class extends Component {
+
+    constructor(props) {
+        super(props)
+        this.state = {
+          open: false,
+          character: this.props.character
+          }
+        }
+      
+
+  handleClickOpen = () => {
+    this.setState({
+        open: true
+    })
   }
 
-  handleToggle = () => {
+  handleClose = () => {
     this.setState({
-        open: !this.state.open
+        open: false
     })
   }
 
@@ -47,41 +69,48 @@ export default withStyles(styles)  (class extends Component {
     })
   }
 
-  handleSubmit = () => {
-    //TODO: validate
+  handleEdit = (character) => {
+    this.props.onEdit(character)
+    this.handleClose()
+  }
 
-    const { character } = this.state
-
-    this.props.onCreate({
-      ...character
-    })
-
+  levelUp = (character) => {
+    this.props.onLevelUp(character)
     this.setState({
-        open: false,
-        character: {
-            name: '',
-            description: '',
-            race: '',
-            classType: ''
-        }
+      character: {
+        ...character,
+        level: character.level + 1
+      }
     })
   }
 
   render() {
-
-    const { open, character: { name, description, race, classType} } = this.state
-            //{ classes } = this.props
+    //const { character } = this.props
+    const { classes } = this.props
+    const { open, character: { name, description, race, classType, level}, character } = this.state
 
   return (
     <div>
-        <Fab color="secondary" size="medium" aria-label="add" onClick={this.handleToggle}>
-            <AddIcon />
-        </Fab>
-        <Dialog open={open} onClose={this.handleToggle} aria-labelledby="form-dialog-title">
-        <DialogTitle id="form-dialog-title">Create Character</DialogTitle>
+      <IconButton onClick={this.handleClickOpen} aria-label="info">
+           <InfoIcon/>
+      </IconButton>
+      <Dialog fullScreen open={open} onClose={(e) => this.handleClose(e)} >
+        <AppBar className={classes.appBar}>
+          <Toolbar>
+            <IconButton edge="start" color="inherit" onClick={this.handleClose} aria-label="close">
+              <CloseIcon />
+            </IconButton>
+            <Typography variant="h6" className={classes.title}>
+              {'D&D'}
+            </Typography>
+            <Button autoFocus color="inherit" onClick={() => this.handleEdit(character)}>
+              save
+            </Button>
+          </Toolbar>
+        </AppBar>
         <DialogContent>
           <DialogContentText>
-            Enter requested information to create character.
+            Edit character info here!
           </DialogContentText>
           <TextField
             autoFocus
@@ -110,7 +139,7 @@ export default withStyles(styles)  (class extends Component {
               value={race}
               onChange={this.handleChange('race')}
               displayEmpty
-              //className={classes.selectEmpty}
+              className={classes.selectEmpty}
             >
               <MenuItem value="">
                 <em>Raceless</em>
@@ -127,7 +156,25 @@ export default withStyles(styles)  (class extends Component {
             </Select>
           </FormControl>
           <br/>
-          <FormControl >
+          <Fragment >
+            <Typography variant="body1" >
+              {'Class: ' + classType}
+            </Typography>
+            <Typography variant="body1" >
+              {'Level: ' + level}
+            </Typography>
+            <Grid item xs={12} md={6}>
+              <Grid container spacing={1} direction="column" alignItems="center">
+                <Grid item>
+                  <ButtonGroup variant="text" size="small" aria-label="small contained button group">
+                    <Button onClick={() => this.levelUp(character)}>+</Button>
+                    <Button>-</Button>
+                  </ButtonGroup>
+                </Grid>
+              </Grid>
+            </Grid>
+          </Fragment>
+          {/* <FormControl >
             <InputLabel shrink id="demo-simple-select-placeholder-label-label">
               Class
             </InputLabel>
@@ -136,7 +183,6 @@ export default withStyles(styles)  (class extends Component {
               value={classType}
               onChange={this.handleChange('classType')}
               displayEmpty
-              //className={classes.selectEmpty}
             >
               <MenuItem value="">
                 <em>Classless</em>
@@ -154,13 +200,8 @@ export default withStyles(styles)  (class extends Component {
               <MenuItem value={'Warlock'}>Warlock</MenuItem>
               <MenuItem value={'Wizard'}>Wizard</MenuItem>
             </Select>
-          </FormControl>
+          </FormControl> */}
         </DialogContent>
-        <DialogActions>
-          <Button onClick={this.handleSubmit} color="primary">
-            Create
-          </Button>
-        </DialogActions>
       </Dialog>
     </div>
   );

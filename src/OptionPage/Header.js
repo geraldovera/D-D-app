@@ -1,6 +1,7 @@
 import React from 'react';
 import { withStyles } from '@material-ui/core/styles';
 import { AppBar, Toolbar, Typography } from '@material-ui/core';
+import CreateAction from './CreateActionDialog'
 //import LogoutDialog from './LogoutDialog'
 
 
@@ -36,7 +37,7 @@ export default withStyles(styles) (class Header extends React.Component {
     }
     
     render() {
-        const { classes, optionType } = this.props;
+        const { classes, optionType, onCreate } = this.props;
         //const { open } = this.state
 
         return (
@@ -46,6 +47,10 @@ export default withStyles(styles) (class Header extends React.Component {
                     <Typography variant="h6" color="inherit" className={classes.grow}>
                         {optionType}
                     </Typography>
+                    <CreateAction
+                    
+                        onCreate={onCreate}
+                    />
                     </Toolbar>
                 </AppBar>
             </div>  

@@ -6,6 +6,10 @@ import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import Character from './Character'
 import { Redirect } from 'react-router-dom'
+import EditDialog from './EditDialog'
+import IconButton from '@material-ui/core/IconButton';
+import InfoIcon from '@material-ui/icons/Info';
+import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
 
 const styles = {
   root: {
@@ -33,8 +37,14 @@ export default withStyles(styles) (class HomePage extends Component {
       })
     }
 
+    handleInfoClick = (e, character) => {
+      e.stopPropagation()
+      console.log('Aquii\n')
+      console.log(character)
+    }
+
     render() {
-      const { classes, characters } = this.props
+      const { classes, characters, onLevelUp, onEdit } = this.props
       const { redirect, characterName } = this.state
 
       if(redirect){
@@ -57,6 +67,16 @@ export default withStyles(styles) (class HomePage extends Component {
                   characterName={character.name}
                   shortDescription={character.description}
                 />
+                <ListItemSecondaryAction>
+                  <EditDialog 
+                    character={character}
+                    onLevelUp={onLevelUp}
+                    onEdit={onEdit}
+                  />
+                </ListItemSecondaryAction>
+                {/* <IconButton onClick={(e) => this.handleInfoClick(e, character)} aria-label="info">
+                  <InfoIcon/>
+                </IconButton> */}
               </ListItem>
               )
             }

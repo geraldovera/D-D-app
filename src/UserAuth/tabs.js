@@ -69,7 +69,7 @@ export default withStyles(styles) (class FullWidthTabs extends Component {
     }
 
     setRedirect = () => {
-      console.log(this.state.name, this.state.password)
+      console.log(this.state.name + '\n' + this.state.password + '\n')
       this.setState({
         redirect: true
       })

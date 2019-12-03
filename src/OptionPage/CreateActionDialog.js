@@ -1,81 +1,18 @@
-// import React, { Component } from 'react';
-// import Button from '@material-ui/core/Button';
-// import Dialog from '@material-ui/core/Dialog';
-// import DialogActions from '@material-ui/core/DialogActions';
-// import DialogContent from '@material-ui/core/DialogContent';
-// import DialogContentText from '@material-ui/core/DialogContentText';
-// import DialogTitle from '@material-ui/core/DialogTitle';
-// import IconButton from '@material-ui/core/IconButton';
-// import InfoIcon from '@material-ui/icons/Info';
-
-// export default class extends Component {
-//   constructor(props) {
-//     super(props)
-//     this.state = {
-//       open: false,
-//       character: {
-//         name: '',
-//         description: ''
-//       }
-//     }
-//   }
-
-//   handleToggle = () => {
-//     this.setState({
-//         open: !this.state.open
-//     })
-//   }
-
-//   //console.log(action)
-
-//   render(){
-
-//     const { open } = this.state
-//     const { action } = this.props
-
-//   return (
-//     <div>
-//         <IconButton onClick={this.handleToggle}>
-//             <InfoIcon />
-//         </IconButton>
-//         <Dialog open={open} onClose={this.handleToggle} aria-labelledby="form-dialog-title">
-//         <DialogTitle id="form-dialog-title">{action.name}</DialogTitle>
-//         <DialogContent>
-//           <DialogContentText>
-//             {action.type}
-//           </DialogContentText>
-
-//         </DialogContent>
-//         <DialogActions>
-//           <Button onClick={this.handleToggle} color="primary">
-//             Close
-//           </Button>
-//         </DialogActions>
-//       </Dialog>
-//     </div>
-//   );
-// }
-//}
-
 import React, { Component } from 'react';
-import { makeStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import IconButton from '@material-ui/core/IconButton';
-import InfoIcon from '@material-ui/icons/Info';
 import Typography from '@material-ui/core/Typography';
 import CloseIcon from '@material-ui/icons/Close';
 
 import TextField from '@material-ui/core/TextField';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
-import FormControl from '@material-ui/core/FormControl';
-import InputLabel from '@material-ui/core/InputLabel';
-import MenuItem from '@material-ui/core/MenuItem';
-import Select from '@material-ui/core/Select';
 import { withStyles } from '@material-ui/core/styles';
+import Fab from '@material-ui/core/Fab';
+import AddIcon from '@material-ui/icons/Add';
 
 const styles = theme => ({
     appBar: {
@@ -100,7 +37,10 @@ export default withStyles(styles) (class extends Component {
         super(props)
         this.state = {
           open: false,
-          action: this.props.action
+          action: {
+              name: '',
+              type: ''
+          }
           }
         }
       
@@ -131,29 +71,32 @@ export default withStyles(styles) (class extends Component {
 
     const { action } = this.state
 
-    this.props.onEdit({
-        ...action,
+    this.props.onCreate({
+      ...action
     })
-}
 
-handleEdit = () => {
-    this.handleSubmit()
-    this.handleClose()
-}
+    this.setState({
+        open: false,
+        action: {
+            name: '',
+            type: ''
+        }
+    })
+  }
 
   render() {
     //const { character } = this.props
     //const { classes } = this.props
     //const { open, character: { name, description, race, classType} } = this.state
 
-    const { classes, onEdit } = this.props
-    const { open, action, action: { name, type } } = this.state
+    const { classes, onCreate } = this.props
+    const { open, action: { name, type } } = this.state
 
   return (
     <div>
-      <IconButton onClick={this.handleClickOpen} aria-label="info">
-           <InfoIcon/>
-      </IconButton>
+        <Fab color="secondary" size="small" aria-label="add" onClick={this.handleClickOpen}>
+            <AddIcon />
+        </Fab>
       <Dialog fullScreen open={open} onClose={this.handleClose} >
         <AppBar className={classes.appBar}>
           <Toolbar>
@@ -163,7 +106,7 @@ handleEdit = () => {
             <Typography variant="h6" className={classes.title}>
               {'D&D'}
             </Typography>
-            <Button autoFocus color="inherit" onClick={this.handleEdit}>
+            <Button autoFocus color="inherit" onClick={this.handleSubmit}>
               save
             </Button>
           </Toolbar>

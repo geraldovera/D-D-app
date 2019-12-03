@@ -20,19 +20,17 @@ const useStyles = makeStyles(theme => ({
 
 export default function SimpleList(props) {
   const classes = useStyles();
-  const { actions, handleItemClick, handleDialogClose, open } = props
+  const { actions, onEdit, handleItemClick, handleDialogClose, open } = props
 
   return (
     <div className={classes.root}>
       <List component="nav" aria-label="secondary mailbox folders">
         {actions.map(action => (
-            <ListItem button height={10} key={action.name}>
+            <ListItem button height={10} key={action.idx}>
                 <ListItemText primary={action.name} secondary={action.type} />
                 <ActionDialog
                     action={action}
-                    open={open}
-                    handleDialogOpen={handleItemClick}
-                    handleDialogClose={handleDialogClose}
+                    onEdit={onEdit}
                 ></ActionDialog>
             </ListItem>
         ))
