@@ -113,7 +113,7 @@ export default withStyles(styles) (class extends Component {
         </AppBar>
         <DialogContent>
           <DialogContentText>
-            Enter requested information to create character.
+            Enter requested information to create new option.
           </DialogContentText>
           <TextField
             autoFocus

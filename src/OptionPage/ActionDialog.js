@@ -170,7 +170,7 @@ handleEdit = () => {
         </AppBar>
         <DialogContent>
           <DialogContentText>
-            Enter requested information to create character.
+            Edit option information here!.
           </DialogContentText>
           <TextField
             autoFocus
